@@ -1,15 +1,27 @@
+import sys
+
+# QGIS embeds Python with sys.stderr = None in some contexts.
+# numpy and other C extensions try to write warnings there, which crashes.
+if sys.stderr is None:
+    import io
+    sys.stderr = io.StringIO()
+
+
 def classFactory(iface):
     missing = []
 
     try:
-        import rasterio
+        import rasterio  # noqa: F401
     except ImportError:
         missing.append("rasterio")
 
     try:
         import sklearn
-        from packaging.version import Version
-        if Version(sklearn.__version__) >= Version("1.6"):
+        # Avoid importing 'packaging' — not guaranteed in OSGeo4W.
+        # Parse major.minor directly from the version string.
+        parts = sklearn.__version__.split(".")
+        major, minor = int(parts[0]), int(parts[1])
+        if (major, minor) >= (1, 6):
             from PyQt5.QtWidgets import QMessageBox
             QMessageBox.warning(
                 None,
@@ -24,12 +36,12 @@ def classFactory(iface):
 
     if missing:
         from PyQt5.QtWidgets import QMessageBox
-        pkgs = "  " + "\n  ".join(missing)
+        pkgs = "\n  ".join(missing)
         QMessageBox.critical(
             None,
             "STCRC — missing dependencies",
             "The following packages are required but not installed:\n\n"
-            f"{pkgs}\n\n"
+            f"  {pkgs}\n\n"
             "Install them by opening the OSGeo4W Shell and running:\n\n"
             "    pip install rasterio \"scikit-learn==1.5.2\"\n\n"
             "Then restart QGIS.",
