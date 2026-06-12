@@ -82,11 +82,11 @@ def load_rasters(paths, nodata_override=None, align=False):
     for i, (path, meta) in enumerate(zip(paths, meta_list)):
         with rasterio.open(path) as src:
             profile = src.profile.copy()
-            data = src.read(1).astype(np.float64)
+            data = src.read(1).astype(np.float32)
             nodata = nodata_override if nodata_override is not None else src.nodata
 
             if align:
-                aligned = np.empty(dst_shape, dtype=np.float64)
+                aligned = np.empty(dst_shape, dtype=np.float32)
                 fill = nodata if nodata is not None else np.nan
                 aligned[:] = fill
                 reproject(
@@ -238,7 +238,7 @@ def build_feature_matrix(raster_tuples, feature_type):
     arrays = [arr for arr, _ in raster_tuples]
     ref_profile = raster_tuples[0][1]
 
-    combined_mask = np.zeros(arrays[0].shape, dtype=bool)
+    combined_mask = np.zeros(arrays[0].shape, dtype=bool)  # bool, no change needed
     for arr in arrays:
         combined_mask |= arr.mask
 
@@ -250,5 +250,5 @@ def build_feature_matrix(raster_tuples, feature_type):
         diffs = [arrays[t + 1].data - arrays[t].data for t in range(len(arrays) - 1)]
         cols = [d[valid_mask] for d in diffs]
 
-    matrix = np.column_stack(cols)
+    matrix = np.column_stack(cols).astype(np.float32)
     return matrix, valid_mask, ref_profile
