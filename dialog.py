@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import (
     QProgressBar,
 )
 from PyQt5.QtCore import Qt, QThread
+from PyQt5.QtGui import QPixmap
 
 from .processing.stage1_ingestion import (
     load_rasters, compute_diagnostics, format_diagnostic_text,
@@ -108,6 +109,28 @@ class STCRCDialog(QDialog):
 
         outer = QVBoxLayout(self)
         outer.setContentsMargins(6, 6, 6, 6)
+
+        # Header with logo and title
+        header_row = QHBoxLayout()
+        header_row.setContentsMargins(4, 4, 4, 6)
+        icon_label = QLabel()
+        icon_path = os.path.join(os.path.dirname(__file__), "resources", "icon.png")
+        pixmap = QPixmap(icon_path)
+        if not pixmap.isNull():
+            icon_label.setPixmap(pixmap.scaled(48, 48, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        title_label = QLabel("STCRC — Spatio-Temporal Change Regime Classification")
+        title_label.setStyleSheet("font-size: 13px; font-weight: bold;")
+        title_label.setWordWrap(True)
+        header_row.addWidget(icon_label)
+        header_row.addSpacing(8)
+        header_row.addWidget(title_label, stretch=1)
+        outer.addLayout(header_row)
+
+        # Separator line
+        line = QFrame()
+        line.setFrameShape(QFrame.HLine)
+        line.setFrameShadow(QFrame.Sunken)
+        outer.addWidget(line)
 
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
