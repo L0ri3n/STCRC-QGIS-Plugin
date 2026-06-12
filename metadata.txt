@@ -1,0 +1,16 @@
+[general]
+name=STCRC
+qgisMinimumVersion=3.0
+description=Spatio-Temporal Change Regime Classification
+version=0.1
+author=L. Crespo
+email=lorienuniversidad@gmail.com
+about=Classifies pixels in a raster time-stack by temporal behaviour pattern using PCA and unsupervised learning (K-Means, DBSCAN, Isolation Forest).
+tracker=
+repository=
+tags=raster,classification,clustering,time series,PSI,NDVI
+homepage=
+category=Raster
+icon=resources/icon.png
+experimental=True
+deprecated=False
