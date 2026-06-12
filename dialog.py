@@ -117,7 +117,13 @@ class STCRCDialog(QDialog):
         icon_path = os.path.join(os.path.dirname(__file__), "resources", "icon.png")
         pixmap = QPixmap(icon_path)
         if not pixmap.isNull():
-            icon_label.setPixmap(pixmap.scaled(48, 48, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+            dpr = QApplication.primaryScreen().devicePixelRatio()
+            logical_size = 48
+            physical_size = int(logical_size * dpr)
+            scaled = pixmap.scaled(physical_size, physical_size, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            scaled.setDevicePixelRatio(dpr)
+            icon_label.setPixmap(scaled)
+            icon_label.setFixedSize(logical_size, logical_size)
         title_label = QLabel("STCRC — Spatio-Temporal Change Regime Classification")
         title_label.setStyleSheet("font-size: 13px; font-weight: bold;")
         title_label.setWordWrap(True)
