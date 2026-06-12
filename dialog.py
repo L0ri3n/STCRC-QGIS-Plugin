@@ -7,9 +7,9 @@ from PyQt5.QtWidgets import (
     QDoubleSpinBox, QSpinBox, QStackedWidget, QWidget,
     QScrollArea, QFrame, QApplication, QLineEdit,
     QTableWidget, QTableWidgetItem, QHeaderView, QAbstractItemView,
-    QProgressBar, QThread,
+    QProgressBar,
 )
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QThread
 
 from .processing.stage1_ingestion import (
     load_rasters, compute_diagnostics, format_diagnostic_text,
